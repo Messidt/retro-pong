@@ -5,14 +5,16 @@ const ctx = canvas.getContext('2d');
 // Setting canvas width and height, storing it in variables //
 canvas.width = 800;
 canvas.height = 600;
-
 const cw = canvas.width;
 const ch = canvas.height;
 
 // Ball properties //
-const ballSize = 30;
+const ballSize = 10;
 let ballX = cw/2;
 let ballY = ch/2;
+
+let ballSpeedX = 2;
+let ballSpeedY = 2;
 
 // Paddle properties //
 const paddleWidth = 20;
@@ -26,14 +28,24 @@ let playerPaddleY = ch/2;
 const aiPaddleX = cw - 40;
 let aiPaddleY = ch/2;
 
+// Game speed //
+const fps = 60;
+
+// Drawing black table //
 function drawTable() {
   ctx.fillStyle = 'black';
   ctx.fillRect(0, 0, cw, ch);
 }
 
+// Drawing the ball //
 function drawBall() {
-  ctx.fillStyle = 'white';
-  ctx.fillRect(ballX, ballY, ballSize, ballSize);
+  ctx.fillStyle = 'white'; // Ball color
+  ctx.beginPath();
+  ctx.arc(ballX, ballY, ballSize, 0, Math.PI*2, true); // Ball shape
+  ctx.fill();
+  // Moving the ball in X and Y axis
+  ballX += ballSpeedX;
+  ballY += ballSpeedY;
 
 }
 
@@ -47,7 +59,11 @@ function drawAiPaddle() {
   ctx.fillRect(aiPaddleX, aiPaddleY, paddleWidth, paddleHeight);
 }
 
-drawTable();
-drawBall();
-drawPlayerPaddle();
-drawAiPaddle();
+function game() {
+  drawTable();
+  drawBall();
+  drawPlayerPaddle();
+  drawAiPaddle();
+}
+
+setInterval(game, 1000 / fps);
