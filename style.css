@@ -1,0 +1,16 @@
+* {
+  padding: 0;
+  margin: 0;
+  font-family: sans-serif;
+}
+
+body {
+  background: #808080;
+  font-size: 15px;
+}
+
+canvas {
+  margin: 5% auto;
+  display: block;
+  border: 1px solid white;
+}
