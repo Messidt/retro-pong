@@ -21,11 +21,11 @@ const paddleWidth = 20;
 const paddleHeight = 100;
 
 /////// Player paddle properties ///////
-const playerPaddleX = 20;
+const playerPaddleX = 0;
 let playerPaddleY = ch/2;
 
 /////// AI paddle properties ///////
-const aiPaddleX = cw - 40;
+const aiPaddleX = cw - paddleWidth;
 let aiPaddleY = ch/2;
 
 ////// Animation speed //////
@@ -51,9 +51,25 @@ function drawBall() {
   ballY += ballSpeedY;
 
   ///// Collision detection ///////
-  // If ball touches left or right side of canvas it bounces back //
-  if (ballX - ballSize < 0 || ballX + ballSize > cw) {
-    ballSpeedX = -ballSpeedX;
+  // Ball bounces off the player's paddle
+  if (ballX - ballSize < 0) {
+    if (ballY > playerPaddleY && ballY < playerPaddleY + paddleHeight) {
+      ballSpeedX = -ballSpeedX;
+    } else {
+      // But if it hits lef side of the canvas computer scores
+      ballReset();
+    }
+
+  }
+  // Ball also bounces off the computer's paddle
+  if (ballX + ballSize > cw) {
+    if (ballY > aiPaddleY && ballY < aiPaddleY + paddleHeight) {
+      ballSpeedX = -ballSpeedX;
+      // If computer misses, player scores a point
+    } else {
+      ballReset();
+    }
+
   }
   // If ball touches upper or bottom line of canvas it bounces back //
   if (ballY - ballSize < 0 || ballY + ballSize > ch) {
@@ -81,6 +97,22 @@ function playerMove(e) {
     playerPaddleY = ch - paddleHeight;
   }
 }
+
+function ballReset() {
+  ballSpeedX = -ballSpeedX;
+  ballX = cw/2;
+  ballY = ch/2;
+}
+
+/*function playerMove(e) {
+  aiPaddleY = e.clientY - offsetTop - paddleHeight/2;
+  if (aiPaddleY < 0) {
+    aiPaddleY = 0;
+  }
+  if (aiPaddleY > ch - paddleHeight) {
+    aiPaddleY = ch - paddleHeight;
+  }
+}*/
 
 function game() {
   drawTable();
