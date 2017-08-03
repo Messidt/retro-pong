@@ -1,3 +1,8 @@
+/*******************Retro Pong Game *******************/
+/*******************Author: Piotr Szmidt **************/
+/******************03.08.2017*************************/
+
+
 ////// Catching canvas element and getting context //////
 const canvas = document.querySelector('canvas');
 const ctx = canvas.getContext('2d');
@@ -34,6 +39,10 @@ const fps = 60;
 ///// Canvas offset top /////
 let offsetTop = canvas.offsetTop;
 
+////// Scores //////
+let playerScore = 0;
+let aiScore = 0;
+
 ///// Drawing black table //////
 function drawTable() {
   ctx.fillStyle = 'black';
@@ -58,6 +67,7 @@ function drawBall() {
     } else {
       // But if it hits lef side of the canvas computer scores
       ballReset();
+      aiScore++;
     }
 
   }
@@ -68,6 +78,7 @@ function drawBall() {
       // If computer misses, player scores a point
     } else {
       ballReset();
+      playerScore++;
     }
 
   }
@@ -78,6 +89,7 @@ function drawBall() {
 
 }
 
+//// Drawing player's and computer's paddle //////
 function drawPlayerPaddle() {
   ctx.fillStyle = 'white';
   ctx.fillRect(playerPaddleX, playerPaddleY, paddleWidth, paddleHeight);
@@ -88,6 +100,7 @@ function drawAiPaddle() {
   ctx.fillRect(aiPaddleX, aiPaddleY, paddleWidth, paddleHeight);
 }
 
+///// Controlling player's paddle and keeping the paddle inside canvas //////
 function playerMove(e) {
   playerPaddleY = e.clientY - offsetTop - paddleHeight/2;
   if (playerPaddleY < 0) {
@@ -116,6 +129,29 @@ function ballReset() {
   ballY = ch/2;
 }
 
+//// Shows player and computer score ///////
+function drawScore() {
+  ctx.font = '60px Arial';
+  ctx.fillText(playerScore, cw/4, ch/2);
+  ctx.fillText(aiScore, cw - cw/4, ch/2);
+
+}
+
+//// Main function, wraps all together for interval /////
+function game() {
+  drawTable();
+  drawBall();
+  drawPlayerPaddle();
+  drawAiPaddle();
+  computerMove();
+  drawScore();
+}
+
+///// Event for controling player's paddle /////
+canvas.addEventListener('mousemove', playerMove);
+
+setInterval(game, 1000 / fps);
+
 // Testing AI paddle movement //
 /*function playerMove(e) {
   aiPaddleY = e.clientY - offsetTop - paddleHeight/2;
@@ -126,15 +162,3 @@ function ballReset() {
     aiPaddleY = ch - paddleHeight;
   }
 }*/
-
-function game() {
-  drawTable();
-  drawBall();
-  drawPlayerPaddle();
-  drawAiPaddle();
-  computerMove();
-}
-
-canvas.addEventListener('mousemove', playerMove);
-
-setInterval(game, 1000 / fps);
