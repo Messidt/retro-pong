@@ -13,8 +13,8 @@ const ballSize = 10;
 let ballX = cw/2;
 let ballY = ch/2;
 
-let ballSpeedX = 2;
-let ballSpeedY = 2;
+let ballSpeedX = 5;
+let ballSpeedY = 5;
 
 // Paddle properties //
 const paddleWidth = 20;
@@ -46,6 +46,12 @@ function drawBall() {
   // Moving the ball in X and Y axis
   ballX += ballSpeedX;
   ballY += ballSpeedY;
+  if (ballX - ballSize < 0 || ballX + ballSize > cw) {
+    ballSpeedX = -ballSpeedX;
+  }
+  if (ballY - ballSize < 0 || ballY + ballSize > ch) {
+    ballSpeedY = -ballSpeedY;
+  }
 
 }
 
