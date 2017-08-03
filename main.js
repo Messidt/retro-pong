@@ -13,8 +13,8 @@ const ballSize = 10;
 let ballX = cw/2;
 let ballY = ch/2;
 
-let ballSpeedX = 5;
-let ballSpeedY = 5;
+let ballSpeedX = 3;
+let ballSpeedY = 3;
 
 /////// Paddle properties ////////
 const paddleWidth = 20;
@@ -98,12 +98,25 @@ function playerMove(e) {
   }
 }
 
+//////// AI Setup ///////
+function computerMove() {
+  if (aiPaddleY + paddleHeight/2 < ballY - 40) {
+    aiPaddleY += 5;
+  } else if (aiPaddleY + paddleHeight/2 > ballY + 40){
+    aiPaddleY -= 5;
+  }
+}
+
+
+/* When ball leaves the game area,
+this function sets ball position in the center of canvas */
 function ballReset() {
   ballSpeedX = -ballSpeedX;
   ballX = cw/2;
   ballY = ch/2;
 }
 
+// Testing AI paddle movement //
 /*function playerMove(e) {
   aiPaddleY = e.clientY - offsetTop - paddleHeight/2;
   if (aiPaddleY < 0) {
@@ -119,6 +132,7 @@ function game() {
   drawBall();
   drawPlayerPaddle();
   drawAiPaddle();
+  computerMove();
 }
 
 canvas.addEventListener('mousemove', playerMove);
