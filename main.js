@@ -26,11 +26,11 @@ const paddleWidth = 20;
 const paddleHeight = 100;
 
 /////// Player paddle properties ///////
-const playerPaddleX = 0;
+const playerPaddleX = 20;
 let playerPaddleY = ch/2;
 
 /////// AI paddle properties ///////
-const aiPaddleX = cw - paddleWidth;
+const aiPaddleX = cw - paddleWidth - 20;
 let aiPaddleY = ch/2;
 
 ////// Animation speed //////
@@ -61,10 +61,13 @@ function drawBall() {
 
   ///// Collision detection ///////
   // Ball bounces off the player's paddle
-  if (ballX - ballSize < 0) {
+  if (ballX - ballSize < playerPaddleX + paddleWidth) {
     if (ballY > playerPaddleY && ballY < playerPaddleY + paddleHeight) {
       ballSpeedX = -ballSpeedX;
-    } else {
+      if(ballSpeedX > 0 ) ballSpeedX += 0.5
+      else ballSpeedX -= 0.5
+    } 
+    else {
       // But if it hits lef side of the canvas computer scores
       ballReset();
       aiScore++;
@@ -72,11 +75,14 @@ function drawBall() {
 
   }
   // Ball also bounces off the computer's paddle
-  if (ballX + ballSize > cw) {
+  if (ballX + ballSize > aiPaddleX) {
     if (ballY > aiPaddleY && ballY < aiPaddleY + paddleHeight) {
       ballSpeedX = -ballSpeedX;
+      if(ballSpeedX > 0 ) ballSpeedX += 0.5
+      else ballSpeedX -= 0.5
       // If computer misses, player scores a point
-    } else {
+    } 
+    else {
       ballReset();
       playerScore++;
     }
@@ -125,8 +131,11 @@ function computerMove() {
 this function sets ball position in the center of canvas */
 function ballReset() {
   ballSpeedX = -ballSpeedX;
+  if(ballSpeedX > 0) ballSpeedX = 3;
+  else ballSpeedX = -3;
   ballX = cw/2;
   ballY = ch/2;
+    
 }
 
 //// Shows player and computer score ///////
