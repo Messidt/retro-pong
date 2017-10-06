@@ -34,7 +34,7 @@ const aiPaddleX = cw - paddleWidth - 20;
 let aiPaddleY = ch/2;
 
 ////// Animation speed //////
-const fps = 60;
+const FPS = 60;
 
 ///// Canvas offset top /////
 let offsetTop = canvas.offsetTop;
@@ -42,6 +42,9 @@ let offsetTop = canvas.offsetTop;
 ////// Scores //////
 let playerScore = 0;
 let aiScore = 0;
+const WIN = 3;
+
+let winScreenShow = false;
 
 ///// Drawing black table //////
 function drawTable() {
@@ -60,17 +63,24 @@ function drawBall() {
   ballY += ballSpeedY;
 
   ///// Collision detection ///////
+    
   // Ball bounces off the player's paddle
   if (ballX - ballSize < playerPaddleX + paddleWidth) {
     if (ballY > playerPaddleY && ballY < playerPaddleY + paddleHeight) {
       ballSpeedX = -ballSpeedX;
+        
+      // Way of controlling the ball in Y axis //
+      let deltaY = ballY - (playerPaddleY + paddleHeight/2);
+      ballSpeedY = deltaY * .2;
+        
+      // Ball speeds up a little whenever it bounces off the paddle //
       if(ballSpeedX > 0 ) ballSpeedX += 0.5
       else ballSpeedX -= 0.5
     } 
-    else {
       // But if it hits lef side of the canvas computer scores
-      ballReset();
+    else {
       aiScore++;
+      ballReset();
     }
 
   }
@@ -78,13 +88,19 @@ function drawBall() {
   if (ballX + ballSize > aiPaddleX) {
     if (ballY > aiPaddleY && ballY < aiPaddleY + paddleHeight) {
       ballSpeedX = -ballSpeedX;
+        
+      // Way of controlling the ball in Y axis //
+      let deltaY = ballY - (aiPaddleY + paddleHeight/2);
+      ballSpeedY = deltaY * .2;
+        
+      // Ball speeds up a little whenever it bounces off the paddle //
       if(ballSpeedX > 0 ) ballSpeedX += 0.5
       else ballSpeedX -= 0.5
-      // If computer misses, player scores a point
     } 
+      // If computer misses, player scores a point
     else {
-      ballReset();
       playerScore++;
+      ballReset();
     }
 
   }
@@ -127,12 +143,22 @@ function computerMove() {
 }
 
 
-/* When ball leaves the game area,
-this function sets ball position in the center of canvas */
+/* When ball leaves the game area */
 function ballReset() {
+  // If one of the players won the game 
+  if(playerScore >= WIN || aiScore >= WIN) {
+      winScreenShow = true;
+  }
   ballSpeedX = -ballSpeedX;
+    
+  // Reseting the X speed of the ball //
   if(ballSpeedX > 0) ballSpeedX = 3;
   else ballSpeedX = -3;
+    
+  ballSpeedY = -ballSpeedY;
+  if (ballSpeedY > 0) ballSpeedY = 3;
+  else ballSpeedY = -3;
+  // Ball moves from the center of canvas element //
   ballX = cw/2;
   ballY = ch/2;
     
@@ -148,6 +174,18 @@ function drawScore() {
 
 //// Main function, wraps all together for interval /////
 function game() {
+  if (winScreenShow) {
+      ctx.fillStyle = 'white';
+      ctx.fillText('Game Over', 250, 200);
+      if (playerScore >= WIN) {
+          ctx.fillText('You win!', 220, 400);
+      } else if (aiScore >= WIN) {
+          ctx.fillText('Computer wins!', 210, 400);
+      }
+      ctx.fillText('Click to play again', 180, 470);
+      return;
+      
+  }
   drawTable();
   drawBall();
   drawPlayerPaddle();
@@ -159,7 +197,9 @@ function game() {
 ///// Event for controling player's paddle /////
 canvas.addEventListener('mousemove', playerMove);
 
-setInterval(game, 1000 / fps);
+setInterval(game, 1000 / FPS);
+
+
 
 // Testing AI paddle movement //
 /*function playerMove(e) {
