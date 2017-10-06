@@ -42,7 +42,7 @@ let offsetTop = canvas.offsetTop;
 ////// Scores //////
 let playerScore = 0;
 let aiScore = 0;
-const WIN = 3;
+const WIN = 11;
 
 let winScreenShow = false;
 
@@ -50,6 +50,14 @@ let winScreenShow = false;
 function drawTable() {
   ctx.fillStyle = 'black';
   ctx.fillRect(0, 0, cw, ch);
+}
+
+// Drawing net in the middle //
+function drawNet(){
+    ctx.fillStyle = 'white';
+    for(let i = 10; i <= cw; i+=40) {
+        ctx.fillRect(cw/2, i, 2, 20);
+    }
 }
 
 ////// Drawing the ball //////
@@ -142,6 +150,14 @@ function computerMove() {
   }
 }
 
+function playAgain(){
+    if(winScreenShow) {
+        playerScore = 0;
+        aiScore = 0;
+        winScreenShow = false;
+    }
+}
+
 
 /* When ball leaves the game area */
 function ballReset() {
@@ -178,7 +194,7 @@ function game() {
       ctx.fillStyle = 'white';
       ctx.fillText('Game Over', 250, 200);
       if (playerScore >= WIN) {
-          ctx.fillText('You win!', 220, 400);
+          ctx.fillText('You win!', 295, 400);
       } else if (aiScore >= WIN) {
           ctx.fillText('Computer wins!', 210, 400);
       }
@@ -187,6 +203,7 @@ function game() {
       
   }
   drawTable();
+  drawNet();
   drawBall();
   drawPlayerPaddle();
   drawAiPaddle();
@@ -196,6 +213,7 @@ function game() {
 
 ///// Event for controling player's paddle /////
 canvas.addEventListener('mousemove', playerMove);
+canvas.addEventListener('click', playAgain);
 
 setInterval(game, 1000 / FPS);
 
